@@ -1,0 +1,35 @@
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Msrmhs@2905000
+      MYSQL_DATABASE: edusphere
+     # MYSQL_USER: root
+      #MYSQL_PASSWORD: Msrmhs@2905000
+    ports:
+      - "3306:3306"
+
+  backend:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "5001:5001"
+    command: gunicorn -b 0.0.0.0:5001 app:app 
+    environment:
+      DB_USER: root
+      DB_PASSWORD: Msrmhs@290500
+      DB_HOST: localhost
+      DB_NAME: edusphere
+    restart: always
+  
+  frontend:
+    build: ../frontend/my-app
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL= "https://backend:5001/api"
