@@ -1,4 +1,4 @@
-# EduSphere API
+# EduSphere 
 
 EduSphere is a robust backend API for connecting students globally with research and internship opportunities. Built with FastAPI and PostgreSQL, it provides a secure and scalable platform for students and universities to interact.
 
