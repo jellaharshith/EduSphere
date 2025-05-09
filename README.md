@@ -1,6 +1,6 @@
 # EduSphere 
 
-EduSphere is a robust backend API for connecting students globally with research and internship opportunities. Built with FastAPI and PostgreSQL, it provides a secure and scalable platform for students and universities to interact.
+EduSphere is a robust backend API for connecting students globally with research and internship opportunities. Built with FastAPI and SQLite (for local development), it provides a secure and scalable platform for students and universities to interact.
 
 ## 🚀 Features
 
@@ -32,7 +32,7 @@ EduSphere is a robust backend API for connecting students globally with research
 ## 🛠 Tech Stack
 
 - **Framework**: FastAPI (Python)
-- **Database**: PostgreSQL
+- **Database**: SQLite (for local development)
 - **ORM**: SQLAlchemy
 - **Authentication**: JWT with OAuth 2.0
 - **Storage**: AWS S3 (profile pictures)
@@ -42,7 +42,8 @@ EduSphere is a robust backend API for connecting students globally with research
 ## 📋 Prerequisites
 
 - Python 3.11+
-- PostgreSQL
+- SQLite (for local development)
+- (Optional) PostgreSQL for production
 - AWS Account (for S3)
 - OpenAI API Key
 
@@ -72,7 +73,9 @@ EduSphere is a robust backend API for connecting students globally with research
 
 4. Create a `.env` file with the following variables:
    ```env
-   DATABASE_URL=postgresql://user:password@localhost:5432/edusphere
+   DATABASE_URL=sqlite:///./edusphere.db  # For local development
+   # For production, use PostgreSQL:
+   # DATABASE_URL=postgresql://user:password@localhost:5432/edusphere
    JWT_SECRET_KEY=your-secret-key
    JWT_ALGORITHM=HS256
    ACCESS_TOKEN_EXPIRE_MINUTES=30
@@ -90,12 +93,13 @@ EduSphere is a robust backend API for connecting students globally with research
 1. Start the application:
 
    ```bash
-   uvicorn app.main:app --reload
+   cd backend
+   uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
    ```
 
 2. Access the API documentation:
-   - Swagger UI: http://localhost:8000/docs
-   - ReDoc: http://localhost:8000/redoc
+   - Swagger UI: http://localhost:8001/docs
+   - ReDoc: http://localhost:8001/redoc
 
 ### Docker Deployment
 
@@ -109,6 +113,25 @@ EduSphere is a robust backend API for connecting students globally with research
    ```bash
    docker run -d -p 8000:8000 --env-file .env edusphere
    ```
+
+## 🧑‍💻 Default Admin Credentials (for local dev)
+
+- Email: `admin@example.com`
+- Password: `adminpassword123`
+
+If you encounter login issues, ensure the password hash in the database is a valid bcrypt hash. See the troubleshooting section below.
+
+## 🛠 Troubleshooting
+
+### Login Issues
+
+- If you get `UnknownHashError` or 500 errors on login, ensure the `hashed_password` in the database is a full bcrypt hash (e.g., starts with `$2b$12$...`).
+- Make sure you are using compatible versions of `bcrypt` and `passlib` (see requirements.txt).
+- If you manually update the database, use the SQLite CLI to avoid shell truncation issues.
+
+### CORS Issues
+
+- If you see CORS errors, ensure your backend is running and CORS middleware is enabled in FastAPI.
 
 ## 📚 API Documentation
 

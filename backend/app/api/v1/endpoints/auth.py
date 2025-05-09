@@ -83,4 +83,15 @@ async def read_users_me(
     # Convert user to Pydantic model and return
     user_data = UserInDB.model_validate(user).model_dump()
     print("Returning user data:", user_data)
-    return {"data": user_data} 
+    return {"data": user_data}
+
+@router.post("/login", response_model=Token)
+def login_json(user_in: UserLogin, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == user_in.email).first()
+    if not user or not verify_password(user_in.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password"
+        )
+    access_token = create_access_token(data={"sub": str(user.id)})
+    return {"access_token": access_token, "token_type": "bearer"} 

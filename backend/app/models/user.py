@@ -14,6 +14,7 @@ class User(Base):
     user_type = Column(Enum(UserType), nullable=False)
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
+    is_admin = Column(Boolean, default=False)
     
     # Common profile fields
     profile_picture_url = Column(String(255))
