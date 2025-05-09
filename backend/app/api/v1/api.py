@@ -1,11 +1,12 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import auth, profiles, opportunities
+from app.api.v1.endpoints import auth, profiles, opportunities, admin
 
 api_router = APIRouter()
 
 api_router.include_router(auth.router, prefix="/auth", tags=["authentication"])
 api_router.include_router(profiles.router, prefix="/profiles", tags=["profiles"])
 api_router.include_router(opportunities.router, prefix="/opportunities", tags=["opportunities"])
+api_router.include_router(admin.router, prefix="/admin", tags=["admin"])
 
 # Import and include other routers here
 # from .endpoints import auth, users, etc.
